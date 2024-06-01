@@ -31,7 +31,7 @@ Before you begin, ensure you have met the following requirements:
     npm run dbsync
     ```
 
-6. **To start the application, use the following command**: 
+5. **To start the application, use the following command**: 
     ``` bash
     npm run start
     ```
