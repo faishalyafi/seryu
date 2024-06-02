@@ -62,7 +62,7 @@ class Controller {
             and to_char(s.shipment_date,'YYYY') =t.tahun and to_char(s.shipment_date,'FMMM')=t.bulan
             group by d.driver_code,d."name",to_char(s.shipment_date,'YYYY'),to_char(s.shipment_date,'FMMM'),t.total_kehadiran
             order by d.driver_code) x
-            where (x.total_pending + x.total_confirmed + x.total_paid + x.total_attendance_salary)>0${isi} offset :offset limit :limit`,{type: QueryTypes.SELECT,replacements:{ offset, limit, month, year, driver_code, status, name}})
+            where (x.total_pending + x.total_confirmed + x.total_paid + x.total_attendance_salary)>0${isi} offset :offset limit :limit`,{type: QueryTypes.SELECT,replacements:{ offset, limit, month, year, driver_code, status, name: `%${name}%`}})
             
             let jml = await sq.query(`select count(*) as total from (select d.driver_code,d."name",to_char(s.shipment_date,'YYYY') tahun,to_char(s.shipment_date,'FMMM') bulan,
             coalesce (sum(sc.total_costs) filter (where sc.cost_status = 'PENDING' and s.shipment_status<>'CANCELLED'),0) total_pending,
@@ -80,7 +80,7 @@ class Controller {
             and to_char(s.shipment_date,'YYYY') =t.tahun and to_char(s.shipment_date,'FMMM')=t.bulan
             group by d.driver_code,d."name",to_char(s.shipment_date,'YYYY'),to_char(s.shipment_date,'FMMM'),t.total_kehadiran
             order by d.driver_code) x
-            where (x.total_pending + x.total_confirmed + x.total_paid + x.total_attendance_salary)>0${isi}`,{type: QueryTypes.SELECT,replacements:{ month, year, driver_code, status, name}})  
+            where (x.total_pending + x.total_confirmed + x.total_paid + x.total_attendance_salary)>0${isi}`,{type: QueryTypes.SELECT,replacements:{ month, year, driver_code, status, name: `%${name}%`}})  
 
             return res.status(200).json({data,total_row:Number('total'in jml[0]?jml[0].total:0),current:page,page_size:limit})
             
